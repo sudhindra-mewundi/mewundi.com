@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mewundi Family — Around the World</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --gold: #C9A84C; --dark: #0A0A0A; --off-white: #F7F4EF; }
+
+    body {
+      background: var(--off-white);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 28px 20px 18px;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+    }
+    .logo-wrap { width: min(400px, 88vw); margin: 0 auto; }
+    .logo-wrap svg { width: 100%; height: auto; display: block; }
+    .subtitle {
+      margin-top: 12px;
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    #map { flex: 1; min-height: 540px; width: 100%; }
+
+    .gold-marker {
+      background: var(--gold);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.35), 0 2px 8px rgba(0,0,0,0.25);
+      width: 14px !important;
+      height: 14px !important;
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: #fff;
+      border-radius: 4px;
+      border-top: 3px solid var(--gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .leaflet-popup-content { margin: 10px 14px; }
+    .popup-city { font-size: 16px; font-weight: 600; color: var(--dark); letter-spacing: 1px; }
+    .popup-region { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-top: 3px; }
+    .leaflet-popup-tip { background: #fff; }
+
+    footer {
+      text-align: center;
+      padding: 14px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(201,168,76,0.6);
+      text-transform: uppercase;
+      border-top: 1px solid rgba(201,168,76,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
+        <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
+        <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
+        <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
+        <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
+        <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
+        <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
+      </svg>
+    </div>
+    <p class="subtitle">Our family across the world</p>
+  </header>
+
+  <div id="map"></div>
+
+  <footer>Family &middot; Legacy &middot; Pride &mdash; mewundi.com</footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const locations = [
+      { name: "Dharwar",      region: "Karnataka, India",           lat: 15.4589,  lng: 75.0078  },
+      { name: "Hubli",        region: "Karnataka, India",           lat: 15.3647,  lng: 75.1240  },
+      { name: "Bangalore",    region: "Karnataka, India",           lat: 12.9716,  lng: 77.5946  },
+      { name: "Kolhapur",     region: "Maharashtra, India",         lat: 16.7050,  lng: 74.2433  },
+      { name: "Sydney",       region: "New South Wales, Australia", lat: -33.8688, lng: 151.2093 },
+      { name: "Philadelphia", region: "Pennsylvania, USA",          lat: 39.9526,  lng: -75.1652 },
+      { name: "Fort Mill",    region: "South Carolina, USA",        lat: 35.0079,  lng: -80.9440 }
+    ];
+
+    const map = L.map('map', {
+      center: [20, 50],
+      zoom: 3,
+      zoomControl: true,
+      scrollWheelZoom: true
+    });
+
+    // ESRI World Street Map — completely free, no API key, no auth, works everywhere
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a>',
+        maxZoom: 18
+      }
+    ).addTo(map);
+
+    const goldIcon = L.divIcon({
+      className: 'gold-marker',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -12]
+    });
+
+    locations.forEach(loc => {
+      L.marker([loc.lat, loc.lng], { icon: goldIcon })
+        .addTo(map)
+        .bindPopup(`
+          <div class="popup-city">${loc.name}</div>
+          <div class="popup-region">${loc.region}</div>
+        `);
+    });
+
+    // Gold dashed connecting lines
+    const latlngs = locations.map(l => [l.lat, l.lng]);
+    L.polyline(latlngs, {
+      color: '#C9A84C',
+      weight: 1.2,
+      opacity: 0.5,
+      dashArray: '5, 6'
+    }).addTo(map);
+  </script>
+
+</body>
+</html>

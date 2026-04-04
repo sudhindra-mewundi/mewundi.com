@@ -3,31 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <!-- Primary SEO -->
   <title>Mewundi | Family Name | Asia, Australia & USA</title>
   <meta name="description" content="Mewundi is a family name with roots and members spread across Asia, Australia and the USA. A name that carries family, legacy and pride across generations and continents."/>
-  <meta name="keywords" content="Mewundi, Mewundi family, Mewundi name, Mewundi Asia, Mewundi Australia, Mewundi USA, Mewundi heritage, Mewundi legacy"/>
+  <meta name="keywords" content="Mewundi, Mewundi family, Mewundi name, Mewundi Asia, Mewundi Australia, Mewundi USA, Mewundi heritage, Mewundi legacy, Dharwar, Hubli, Bangalore, Kolhapur, Sydney, Philadelphia, Fort Mill"/>
   <meta name="author" content="Mewundi Family"/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://www.mewundi.com/"/>
-
-  <!-- Open Graph (Facebook, WhatsApp, LinkedIn previews) -->
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://www.mewundi.com/"/>
   <meta property="og:title" content="Mewundi | Family Name | Asia, Australia & USA"/>
   <meta property="og:description" content="Mewundi is a family name with roots and members spread across Asia, Australia and the USA. Family · Legacy · Pride."/>
   <meta property="og:site_name" content="Mewundi"/>
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary"/>
   <meta name="twitter:title" content="Mewundi | Family Name | Asia, Australia & USA"/>
   <meta name="twitter:description" content="Mewundi is a family name with roots and members spread across Asia, Australia and the USA. Family · Legacy · Pride."/>
-
-  <!-- Sitemap reference -->
   <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
-
-  <!-- Structured Data (JSON-LD) — helps Google understand the page -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -38,28 +28,21 @@
     "areaServed": ["Asia", "Australia", "United States"]
   }
   </script>
-
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --gold: #C9A84C;
-      --off-white: #F7F4EF;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
-
+    :root { --gold: #C9A84C; --off-white: #F7F4EF; --dark: #0A0A0A; }
+    html, body { height: 100%; width: 100%; }
     body {
       background-color: var(--off-white);
       min-height: 100vh;
+      font-family: 'Cormorant Garamond', Georgia, serif;
       overflow: hidden;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
     body::before {
       content: '';
       position: fixed;
@@ -70,43 +53,64 @@
       pointer-events: none;
       z-index: 0;
     }
-
-    .corner {
-      position: fixed;
-      width: 60px;
-      height: 60px;
-      opacity: 0.4;
-    }
+    .corner { position: fixed; width: 60px; height: 60px; opacity: 0.4; z-index: 10; }
     .corner--tl { top: 32px; left: 32px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
     .corner--tr { top: 32px; right: 32px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
     .corner--bl { bottom: 32px; left: 32px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
     .corner--br { bottom: 32px; right: 32px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
 
     .stage {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       z-index: 1;
-      opacity: 0;
-      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateY(0);
-      }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
     }
 
     .logo-wrap {
       width: min(520px, 88vw);
+      opacity: 0;
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    }
+    .logo-wrap svg { width: 100%; height: auto; display: block; }
+
+    .divider {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      margin: 28px 0 24px;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
     }
 
-    .logo-wrap svg {
-      width: 100%;
-      height: auto;
-      display: block;
+    .map-btn {
+      opacity: 0;
+      animation: fadeUp 1s ease 1.1s forwards;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .map-btn:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+    .map-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -128,6 +132,15 @@
         <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
       </svg>
     </div>
+
+    <div class="divider"></div>
+
+    <a href="map.html" target="_blank" class="map-btn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+      Our Family Around the World
+    </a>
   </div>
 
 </body>
