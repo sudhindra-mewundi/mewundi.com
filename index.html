@@ -24,7 +24,7 @@
     "@type": "Organization",
     "name": "Mewundi",
     "url": "https://www.mewundi.com",
-    "description": "Mewundi is a family name with members spread across Asia, Australia and the USA, united by family, legacy and pride.",
+    "description": "Mewundi is a family name with members spread across Asia, Australia and the USA.",
     "areaServed": ["Asia", "Australia", "United States"]
   }
   </script>
@@ -122,18 +122,21 @@
       background: var(--off-white);
     }
 
+    /* Header: back button on its own row, then logo centred below */
     .map-header {
-      text-align: center;
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid rgba(201,168,76,0.3);
-      position: relative;
       flex-shrink: 0;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      padding-bottom: 14px;
     }
+
+    /* Top bar — just the back button, full width */
+    .map-header-top {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px 0;
+    }
+
     .back-btn {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
       display: inline-flex;
       align-items: center;
       gap: 7px;
@@ -147,18 +150,27 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
+      white-space: nowrap;
     }
     .back-btn:hover { background: var(--gold); color: #fff; }
     .back-btn svg { width: 12px; height: 12px; fill: currentColor; flex-shrink: 0; }
 
-    .map-logo { width: min(300px, 60vw); margin: 0 auto; }
+    /* Logo row — centred, sits below back button */
+    .map-header-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 16px 0;
+    }
+    .map-logo { width: min(300px, 72vw); }
     .map-logo svg { width: 100%; height: auto; display: block; }
     .map-subtitle {
-      margin-top: 8px;
+      margin-top: 6px;
       font-size: 10px;
       letter-spacing: 5px;
       color: var(--gold);
       text-transform: uppercase;
+      text-align: center;
     }
 
     #map { flex: 1; width: 100%; min-height: 0; }
@@ -214,21 +226,25 @@
   <!-- ── MAP PAGE ── -->
   <div class="page hidden" id="mappage">
     <div class="map-header">
-      <button class="back-btn" onclick="showHome()">
-        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        Back
-      </button>
-      <div class="map-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
-          <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
-          <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
-          <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
-          <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
-          <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
-          <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
-        </svg>
+      <div class="map-header-top">
+        <button class="back-btn" onclick="showHome()">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Back
+        </button>
       </div>
-      <p class="map-subtitle">Our family across the world</p>
+      <div class="map-header-logo">
+        <div class="map-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
+            <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
+            <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
+            <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
+            <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
+            <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
+            <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
+          </svg>
+        </div>
+        <p class="map-subtitle">Our family across the world</p>
+      </div>
     </div>
     <div id="map"></div>
   </div>
@@ -252,28 +268,13 @@
     function initMap() {
       if (mapInitialised) return;
       mapInitialised = true;
-
-      leafletMap = L.map('map', {
-        center: [20, 50],
-        zoom: 3,
-        zoomControl: true,
-        scrollWheelZoom: true
-      });
-
+      leafletMap = L.map('map', { center: [20, 50], zoom: 3 });
       L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-        {
-          attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a>',
-          maxZoom: 18
-        }
+        { attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a>', maxZoom: 18 }
       ).addTo(leafletMap);
 
-      const goldIcon = L.divIcon({
-        className: 'gold-marker',
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-        popupAnchor: [0, -12]
-      });
+      const goldIcon = L.divIcon({ className: 'gold-marker', iconSize: [14,14], iconAnchor: [7,7], popupAnchor: [0,-12] });
 
       locations.forEach(loc => {
         L.marker([loc.lat, loc.lng], { icon: goldIcon })
@@ -281,18 +282,15 @@
           .bindPopup(`<div class="popup-city">${loc.name}</div><div class="popup-region">${loc.region}</div>`);
       });
 
-      const latlngs = locations.map(l => [l.lat, l.lng]);
-      L.polyline(latlngs, { color: '#C9A84C', weight: 1.2, opacity: 0.5, dashArray: '5,6' }).addTo(leafletMap);
+      L.polyline(locations.map(l => [l.lat, l.lng]), {
+        color: '#C9A84C', weight: 1.2, opacity: 0.5, dashArray: '5,6'
+      }).addTo(leafletMap);
     }
 
     function showMap() {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('mappage').classList.remove('hidden');
-      // init map after transition so container has dimensions
-      setTimeout(() => {
-        initMap();
-        if (leafletMap) leafletMap.invalidateSize();
-      }, 300);
+      setTimeout(() => { initMap(); if (leafletMap) leafletMap.invalidateSize(); }, 300);
       history.pushState({ page: 'map' }, '', '#map');
     }
 
@@ -302,8 +300,7 @@
       history.pushState({ page: 'home' }, '', ' ');
     }
 
-    // Handle browser back/forward button
-    window.addEventListener('popstate', function(e) {
+    window.addEventListener('popstate', function() {
       if (location.hash === '#map') {
         showMap();
       } else {
