@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mewundi | Family Name | Asia, Australia & USA</title>
   <meta name="description" content="Mewundi is a family name with roots and members spread across Asia, Australia and the USA. A name that carries family, legacy and pride across generations and continents."/>
-  <meta name="keywords" content="Mewundi, Mewundi family, Mewundi name, Mewundi Asia, Mewundi Australia, Mewundi USA, Mewundi heritage, Mewundi legacy, Dharwar, Hubli, Bangalore, Kolhapur, Sydney, Philadelphia, Fort Mill"/>
+  <meta name="keywords" content="Mewundi, Mewundi family, Mewundi name, Mewundi Asia, Mewundi Australia, Mewundi USA, Mewundi heritage, Mewundi legacy, Dharwar, Hubli, Bangalore, Kolhapur, Mumbai, Sydney, Philadelphia, Fort Mill"/>
   <meta name="author" content="Mewundi Family"/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://www.mewundi.com/"/>
@@ -28,32 +28,45 @@
     "areaServed": ["Asia", "Australia", "United States"]
   }
   </script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --gold: #C9A84C; --off-white: #F7F4EF; --dark: #0A0A0A; }
-    html, body { height: 100%; width: 100%; }
-    body {
-      background-color: var(--off-white);
-      min-height: 100vh;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      overflow: hidden;
-      position: relative;
+    html, body { height: 100%; width: 100%; overflow: hidden; }
+    body { background: var(--off-white); font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* ── PAGES ── */
+    .page {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.55s cubic-bezier(0.77,0,0.18,1), opacity 0.55s ease;
+    }
+    .page.hidden {
+      transform: translateX(60px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── HOME PAGE ── */
+    #home {
       display: flex;
       align-items: center;
       justify-content: center;
+      background: var(--off-white);
     }
-    body::before {
+    #home::before {
       content: '';
-      position: fixed;
+      position: absolute;
       inset: 0;
       background:
         radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.07) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.05) 0%, transparent 60%);
       pointer-events: none;
-      z-index: 0;
     }
-    .corner { position: fixed; width: 60px; height: 60px; opacity: 0.4; z-index: 10; }
+    .corner { position: absolute; width: 60px; height: 60px; opacity: 0.4; }
     .corner--tl { top: 32px; left: 32px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
     .corner--tr { top: 32px; right: 32px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
     .corner--bl { bottom: 32px; left: 32px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
@@ -65,19 +78,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
     }
-
-    .logo-wrap {
-      width: min(520px, 88vw);
-      opacity: 0;
-      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
-    }
+    .logo-wrap { width: min(520px, 88vw); opacity: 0; animation: fadeUp 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards; }
     .logo-wrap svg { width: 100%; height: auto; display: block; }
 
     .divider {
-      width: 1px;
-      height: 40px;
+      width: 1px; height: 40px;
       background: linear-gradient(to bottom, transparent, var(--gold), transparent);
       margin: 28px 0 24px;
       opacity: 0;
@@ -99,49 +105,213 @@
       letter-spacing: 4px;
       text-transform: uppercase;
       cursor: pointer;
-      text-decoration: none;
       transition: background 0.3s, color 0.3s;
     }
-    .map-btn:hover {
-      background: var(--gold);
-      color: #fff;
-    }
-    .map-btn svg { width: 14px; height: 14px; fill: currentColor; }
+    .map-btn:hover { background: var(--gold); color: #fff; }
+    .map-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── MAP PAGE ── */
+    #mappage {
+      display: flex;
+      flex-direction: column;
+      background: var(--off-white);
+    }
+
+    .map-header {
+      text-align: center;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .back-btn:hover { background: var(--gold); color: #fff; }
+    .back-btn svg { width: 12px; height: 12px; fill: currentColor; flex-shrink: 0; }
+
+    .map-logo { width: min(300px, 60vw); margin: 0 auto; }
+    .map-logo svg { width: 100%; height: auto; display: block; }
+    .map-subtitle {
+      margin-top: 8px;
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    #map { flex: 1; width: 100%; min-height: 0; }
+
+    .gold-marker {
+      background: var(--gold);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.35), 0 2px 8px rgba(0,0,0,0.25);
+      width: 14px !important;
+      height: 14px !important;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #fff;
+      border-radius: 4px;
+      border-top: 3px solid var(--gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .leaflet-popup-content { margin: 10px 14px; }
+    .popup-city { font-size: 16px; font-weight: 600; color: var(--dark); letter-spacing: 1px; }
+    .popup-region { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-top: 3px; }
+    .leaflet-popup-tip { background: #fff; }
   </style>
 </head>
 <body>
 
-  <div class="corner corner--tl"></div>
-  <div class="corner corner--tr"></div>
-  <div class="corner corner--bl"></div>
-  <div class="corner corner--br"></div>
-
-  <div class="stage">
-    <div class="logo-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
-        <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
-        <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
-        <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
-        <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
-        <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
-        <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
-      </svg>
+  <!-- ── HOME PAGE ── -->
+  <div class="page" id="home">
+    <div class="corner corner--tl"></div>
+    <div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div>
+    <div class="corner corner--br"></div>
+    <div class="stage">
+      <div class="logo-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
+          <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
+          <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
+          <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
+          <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
+          <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
+          <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
+        </svg>
+      </div>
+      <div class="divider"></div>
+      <button class="map-btn" onclick="showMap()">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Our Family Around the World
+      </button>
     </div>
-
-    <div class="divider"></div>
-
-    <a href="map.html" target="_blank" class="map-btn">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-      </svg>
-      Our Family Around the World
-    </a>
   </div>
+
+  <!-- ── MAP PAGE ── -->
+  <div class="page hidden" id="mappage">
+    <div class="map-header">
+      <button class="back-btn" onclick="showHome()">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Back
+      </button>
+      <div class="map-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="228 50 434 100">
+          <polygon points="232,90 248,56 264,84 280,56 296,90" fill="#C9A84C"/>
+          <polygon points="232,96 248,130 264,102 280,130 296,96" fill="#C9A84C"/>
+          <circle cx="264" cy="93" r="5" fill="#0A0A0A"/>
+          <text x="314" y="106" font-family="Georgia, serif" font-weight="700" font-size="52px" fill="#0A0A0A" letter-spacing="4">MEWUNDI</text>
+          <rect x="314" y="116" width="346" height="3" fill="#C9A84C"/>
+          <text x="314" y="140" font-family="Arial, Helvetica, sans-serif" font-size="11px" fill="#C9A84C" letter-spacing="4">FAMILY · LEGACY · PRIDE</text>
+        </svg>
+      </div>
+      <p class="map-subtitle">Our family across the world</p>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const locations = [
+      { name: "Dharwar",      region: "Karnataka, India",           lat: 15.4589,  lng: 75.0078  },
+      { name: "Hubli",        region: "Karnataka, India",           lat: 15.3647,  lng: 75.1240  },
+      { name: "Bangalore",    region: "Karnataka, India",           lat: 12.9716,  lng: 77.5946  },
+      { name: "Kolhapur",     region: "Maharashtra, India",         lat: 16.7050,  lng: 74.2433  },
+      { name: "Mumbai",       region: "Maharashtra, India",         lat: 19.0760,  lng: 72.8777  },
+      { name: "Sydney",       region: "New South Wales, Australia", lat: -33.8688, lng: 151.2093 },
+      { name: "Philadelphia", region: "Pennsylvania, USA",          lat: 39.9526,  lng: -75.1652 },
+      { name: "Fort Mill",    region: "South Carolina, USA",        lat: 35.0079,  lng: -80.9440 }
+    ];
+
+    let mapInitialised = false;
+    let leafletMap;
+
+    function initMap() {
+      if (mapInitialised) return;
+      mapInitialised = true;
+
+      leafletMap = L.map('map', {
+        center: [20, 50],
+        zoom: 3,
+        zoomControl: true,
+        scrollWheelZoom: true
+      });
+
+      L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        {
+          attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a>',
+          maxZoom: 18
+        }
+      ).addTo(leafletMap);
+
+      const goldIcon = L.divIcon({
+        className: 'gold-marker',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+        popupAnchor: [0, -12]
+      });
+
+      locations.forEach(loc => {
+        L.marker([loc.lat, loc.lng], { icon: goldIcon })
+          .addTo(leafletMap)
+          .bindPopup(`<div class="popup-city">${loc.name}</div><div class="popup-region">${loc.region}</div>`);
+      });
+
+      const latlngs = locations.map(l => [l.lat, l.lng]);
+      L.polyline(latlngs, { color: '#C9A84C', weight: 1.2, opacity: 0.5, dashArray: '5,6' }).addTo(leafletMap);
+    }
+
+    function showMap() {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('mappage').classList.remove('hidden');
+      // init map after transition so container has dimensions
+      setTimeout(() => {
+        initMap();
+        if (leafletMap) leafletMap.invalidateSize();
+      }, 300);
+      history.pushState({ page: 'map' }, '', '#map');
+    }
+
+    function showHome() {
+      document.getElementById('mappage').classList.add('hidden');
+      document.getElementById('home').classList.remove('hidden');
+      history.pushState({ page: 'home' }, '', ' ');
+    }
+
+    // Handle browser back/forward button
+    window.addEventListener('popstate', function(e) {
+      if (location.hash === '#map') {
+        showMap();
+      } else {
+        document.getElementById('mappage').classList.add('hidden');
+        document.getElementById('home').classList.remove('hidden');
+      }
+    });
+  </script>
 
 </body>
 </html>
